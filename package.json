@@ -1,0 +1,21 @@
+{
+  "name": "league-master-backend",
+  "version": "1.0.0",
+  "description": "API gathers and shares detailed statistics from league of legends.",
+  "main": "./src/server.js",
+  "scripts": {
+    "dev": "nodemon",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Kamil Ciula",
+  "license": "ISC",
+  "dependencies": {
+    "agenda": "^2.3.0",
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "mongoose": "^5.8.11",
+    "nodemon": "^2.0.2",
+    "socket.io": "^2.3.0"
+  }
+}
