@@ -1,6 +1,6 @@
 const express = require('express')
 const io = require('socket.io')
-
+// run  docker-compose -f docker-compose.yml -f docker-compose.dev.yml up for development and .prod for production
 const config = require('./config/development')
 
 const serverMiddleware = require('./middleware/server')

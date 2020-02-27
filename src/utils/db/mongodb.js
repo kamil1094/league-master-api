@@ -4,7 +4,7 @@ const mongoose = require('mongoose')
 
 const config = require('../../config/development')
 
-const initMongoDB = () => {
+const initMongoDB = async () => {
   const connection = mongoose.connect(config.db.uri, {
     autoIndex: true,
     poolSize: 50,
@@ -13,7 +13,7 @@ const initMongoDB = () => {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
-  
+
   connection
     .then(db => {
       console.info(`Successfully conneceted to ${config.db.uri}`)
