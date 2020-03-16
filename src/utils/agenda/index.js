@@ -1,13 +1,12 @@
 'use strict'
 
 const Agenda = require('agenda')
-const config = require('../../config/development')
 const fs = require('fs')
 
 const initAgenda = () => {
   let agenda = new Agenda({
     db: {
-        address: config.db.uri
+        address: process.env.DB_URI
     },
   })
   

@@ -1,7 +1,6 @@
 const express = require('express')
 const io = require('socket.io')
 // run  docker-compose -f docker-compose.yml -f docker-compose.dev.yml up for development and .prod for production
-const config = require('./config/development')
 
 const serverMiddleware = require('./middleware/server')
 const { applyMiddleware, applyRoutes } = require('./utils/middleware')
@@ -9,6 +8,8 @@ const routes = require('./routes')
 const { applySocketIO } = require('./utils/socket')
 const { initAgenda } = require('./utils/agenda')
 const { initDB } = require('./utils/db')
+
+require('dotenv').config()
 
 process.on('uncaughtException', e => {
   console.error(e)
@@ -30,7 +31,7 @@ applyMiddleware(serverMiddleware, app)
 
 applyRoutes(routes, app)
 
-const { PORT = config.port } = process.env
+const { PORT } = process.env
 const server = app.listen(PORT, () => {
   console.log(`Server is running at localhost:${PORT}`)
 })

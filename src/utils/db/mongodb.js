@@ -2,8 +2,6 @@
 
 const mongoose = require('mongoose')
 
-const config = require('../../config/development')
-
 const initMongoDB = async () => {
   const connection = mongoose.connect(config.db.uri, {
     autoIndex: true,
@@ -16,7 +14,7 @@ const initMongoDB = async () => {
 
   connection
     .then(db => {
-      console.info(`Successfully conneceted to ${config.db.uri}`)
+      console.info(`Successfully conneceted to ${process.env.DB_URI}`)
       return db
     }).catch(err => {
       if (err.message.code === 'ETIMEDOUT') {
