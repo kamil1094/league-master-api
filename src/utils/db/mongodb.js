@@ -3,7 +3,7 @@
 const mongoose = require('mongoose')
 
 const initMongoDB = async () => {
-  const connection = mongoose.connect(config.db.uri, {
+  const connection = mongoose.connect(process.env.DB_URI, {
     autoIndex: true,
     poolSize: 50,
     bufferMaxEntries: 0,
