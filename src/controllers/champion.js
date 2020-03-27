@@ -1,6 +1,6 @@
 'use strict'
 
-const service = require('../services/champions')
+const service = require('../services/champion')
 
 const getChampions = async (req, res, next) => {
   try {

@@ -1,6 +1,6 @@
 'use strict'
 
-const controller = require('../controllers/champions')
+const controller = require('../controllers/champion')
 
 module.exports = [
   {
@@ -9,5 +9,5 @@ module.exports = [
     handler: [
       controller.getChampions
     ]
-  }
+  },
 ]
