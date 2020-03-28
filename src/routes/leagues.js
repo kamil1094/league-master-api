@@ -7,7 +7,8 @@ module.exports = [
     path: '/api/leagues/challanger',
     method: 'get',
     handler: [
-      controller.getSummonerDetails,
+      // @TODO add middleware for request params
+      controller.getChallangerLeague,
     ]
   },
 ]

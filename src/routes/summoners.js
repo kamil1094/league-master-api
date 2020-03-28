@@ -14,4 +14,11 @@ module.exports = [
       controller.getSummonerDetails,
     ]
   },
+  {
+    path: '/api/summoners/byIds',
+    method: 'post',
+    handler: [
+      controller.getSummonersDetails,
+    ]
+  },
 ]

@@ -10,10 +10,26 @@ class SummonerAPI extends RiotAPI {
   }
 
   async getSummonerData(summonerId) {
+    if (!summonerId) {
+      throw 'Operation requires summonerId'
+    }
     const requestUrl = `${this.baseUrl}summoners/${summonerId}?api_key=${this.apiKey}`
-    const { data } = await axios.get(requestUrl)
+    return axios.get(requestUrl)
+  }
 
-    return data
+  async getSummonersData(summonersIds) {
+    if (!summonersIds || summonersIds.length < 1) {
+      throw 'Operation requires at least one summonerId'
+    }
+
+    let requestUrls = []
+
+    for (let i = 0; i < summonersIds.length; i++) {
+      const summonerId = summonersIds[i]
+      requestUrls.push(`${this.baseUrl}summoners/${summonerId}?api_key=${this.apiKey}`)
+    }
+
+    return Promise.all(requestUrls.map(url => axios.get(url)))
   }
 }
 

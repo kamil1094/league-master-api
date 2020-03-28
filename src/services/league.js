@@ -2,12 +2,14 @@
 
 const LeagueAPI = require('../utils/riotAPI/LeagueAPI')
 
-const getChallangerLeague = async (limit, query) => {
+const getChallangerPlayers = async (limit, query) => {
   const leagueAPI = new LeagueAPI(query.region)
 
-  return leagueAPI.getChallangerPlayers(query.queue, true)
+  const { data } = await leagueAPI.getChallangerPlayers(query.queue)
+
+  return query.byId ? data.entries.map(player => player.summonerId) : data.entries
 }
 
 module.exports = {
-  getChallangerLeague,
+  getChallangerPlayers,
 }
