@@ -1,5 +1,7 @@
 const express = require('express')
 const io = require('socket.io')
+
+require('dotenv').config()
 // run  docker-compose -f docker-compose.yml -f docker-compose.dev.yml up for development and .prod for production
 
 const serverMiddleware = require('./middleware/server')
@@ -8,8 +10,6 @@ const routes = require('./routes')
 const { applySocketIO } = require('./utils/socket')
 const { initAgenda } = require('./utils/agenda')
 const { initDB } = require('./utils/db')
-
-require('dotenv').config()
 
 process.on('uncaughtException', e => {
   console.error(e)

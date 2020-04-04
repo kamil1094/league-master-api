@@ -5,12 +5,12 @@ const axios = require('axios')
 const RiotAPI = require('./RiotAPI')
 
 class LeagueAPI extends RiotAPI {
-  constructor(region, apiKey = process.env.RIOT_API_KEY) {
-    super(region, 'league/v4/', apiKey)
+  constructor(apiKey = process.env.RIOT_API_KEY) {
+    super('league/v4/', apiKey)
   }
 
-  async getChallangerPlayers(queue) {
-    const requestUrl = `${this.baseUrl}challengerleagues/by-queue/${queue}?api_key=${this.apiKey}`
+  async getChallangerPlayers(region, queue) {
+    const requestUrl = `https://${region}.${this.baseUrl}challengerleagues/by-queue/${queue}?api_key=${this.apiKey}`
     return axios.get(requestUrl)
   }
 }

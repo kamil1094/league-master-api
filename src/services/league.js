@@ -2,10 +2,12 @@
 
 const LeagueAPI = require('../utils/riotAPI/LeagueAPI')
 
-const getChallangerPlayers = async (limit, query) => {
-  const leagueAPI = new LeagueAPI(query.region)
+const leagueAPI = new LeagueAPI()
 
-  const { data } = await leagueAPI.getChallangerPlayers(query.queue)
+const getChallangerPlayers = async (limit, query) => {
+  const { queue, region } = query
+
+  const { data } = await leagueAPI.getChallangerPlayers(region, queue)
 
   return query.byId ? data.entries.map(player => player.summonerId) : data.entries
 }

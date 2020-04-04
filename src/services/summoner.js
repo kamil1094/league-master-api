@@ -2,27 +2,27 @@
 
 const SummonerAPI = require('../utils/riotAPI/SummonerAPI')
 
-const getSummonerData = async (limit, region, summonerId) => {
-  const summonerApi = new SummonerAPI(region)
+const summonerApi = new SummonerAPI()
 
-  return (await summonerApi.getSummonerData(summonerId)).data
+const getSummonerData = async (limit, region, summonerId) => {
+  return (await summonerApi.getSummonerData(region, summonerId)).data
 }
 
 const getSummonerAccountId = async query => {
-  const summonerApi = new SummonerAPI(query.region)
+  const { region, summonerId } = query
 
-  const summonerData = summonerApi.getSummonerData(query.summonerId)
+  const summonerData = summonerApi.getSummonerData(region, summonerId)
 
   return summonerData.accountId
 }
 
 const getSummonersData = async (limit, region, summonersIds) => {
-  const summonerApi = new SummonerAPI(region)
-
-  const summonersData = await summonerApi.getSummonersData(summonersIds)
+  const summonersData = await summonerApi.getSummonersData(region, summonersIds)
 
   return summonersData.map(summoner => summoner.data)
 }
+
+// get service for updating champion ids in databse
 
 module.exports = {
   getSummonerData,
