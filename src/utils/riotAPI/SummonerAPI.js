@@ -5,11 +5,11 @@ const axios = require('axios')
 const RiotAPI = require('./RiotAPI')
 
 class SummonerAPI extends RiotAPI {
-  constructor(region, apiKey = process.env.RIOT_API_KEY) {
-    super(region, 'summoner/v4/', apiKey)
+  constructor(apiKey = process.env.RIOT_API_KEY) {
+    super('summoner/v4/', apiKey)
   }
 
-  async getSummonerData(region, summonerId) {
+  async getSummonerDataById(region, summonerId) {
     if (!summonerId) {
       throw 'Operation requires summonerId'
     }
@@ -17,7 +17,7 @@ class SummonerAPI extends RiotAPI {
     return axios.get(requestUrl)
   }
 
-  async getSummonersData(region, summonersIds) {
+  async getSummonersDataByIds(region, summonersIds) {
     if (!summonersIds || summonersIds.length < 1) {
       throw 'Operation requires at least one summonerId'
     }
@@ -30,6 +30,12 @@ class SummonerAPI extends RiotAPI {
     }
 
     return Promise.all(requestUrls.map(url => axios.get(url)))
+  }
+
+  async getSummonerDataByName(region, summonerName) {
+    const requestUrl = `https://${region}.${this.baseUrl}summoners/by-name/${summonerName}?api_key=${this.apiKey}`
+
+    return axios.get(requestUrl)
   }
 }
 

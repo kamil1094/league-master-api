@@ -1,5 +1,6 @@
 'use strict'
 
+const { prepareParticipantsData } = require('../utils/services/match')
 const MatchAPI = require('../utils/riotAPI/MatchAPI')
 
 const Match = require('../models/match')
@@ -19,10 +20,14 @@ const getMatchDetails = async (limit, query) => {
 }
 
 const saveMatchDetails = async data => {
-  // @TODO add some data mapping to change original structure from RIOT API
-  let match = new Match({
+  const { participants, participantIdentities } = data
+
+  const match = new Match({
+    ...data,
     riotData: data,
+    participants: prepareParticipantsData(participants, participantIdentities),
   })
+
   return match.save()
 }
 
@@ -39,15 +44,6 @@ const saveMatchesDetails = async data => {
 
   return
 }
-
-/**
- * @TODO
- * 1) get challanger players
- * 2) get player name
- * 3) get accountId by player name
- * 4) get summoner matchlist by accountId
- * 5) for each gameId get match details and save it in db with proper data mapping
- */
 
 module.exports = {
   getSummonerMatchlist,

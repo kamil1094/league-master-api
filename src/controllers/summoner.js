@@ -7,7 +7,11 @@ const getSummonerDetails = async (req, res, next) => {
     const limit = req.query.limit || 10
     const { region, summonerId } = req.query
 
-    res.json({ data: await service.getSummonerData(limit, region, summonerId) })
+    const { data, headers } = await service.getSummonerDataById(limit, region, summonerId)
+
+    console.log(headers)
+
+    return res.json({ data })
   } catch (err) {
     return next(err)
   }
@@ -19,13 +23,24 @@ const getSummonersDetails = async (req, res, next) => {
     const { region } = req.query
     const { summonersIds } = req.body
 
-    res.json({ data: await service.getSummonersData(limit, region, summonersIds) })
+    return res.json({ data: await service.getSummonersDataByIds(limit, region, summonersIds) })
   } catch (err) {
     return next(err)
   }
 }
 
+const getSummonerDataByName = async (req, res, next) => {
+  const { region, summonerName } = req.query
+
+  const { data, headers } = await service.getSummonerDataByName(region, summonerName)
+
+  console.log(headers)
+
+  return res.json({ data })
+}
+
 module.exports = {
   getSummonerDetails,
   getSummonersDetails,
+  getSummonerDataByName,
 }

@@ -4,6 +4,28 @@ const timestamp = require('mongoose-timestamp')
 
 const MatchSchema = new Schema({
   riotData: {},
+  gameId: {
+    required: true,
+    type: String,
+  },
+  platformId: String,
+  gameCreation: Date,
+  gameDuration: Number,
+  seasonId: Number,
+  gameMode: String,
+  gameType: String,
+  participants: [
+    {
+      summonerName: String,
+      accountId: String,
+      summonerId: String,
+      championId: Number,
+      spell1Id: Number,
+      spell2Id: Number,
+      win: Boolean,
+      stats: {},
+    }
+  ]
 })
 
 MatchSchema.plugin(timestamp, {
