@@ -27,35 +27,12 @@ const getMatchDetails = async (req, res, next) => {
   }
 }
 
-const getRateLimits = headers => {
-  if (!headers['x-app-rate-limit-count']) {
-    return {}
-  }
-
-  const headersArr = headers['x-app-rate-limit-count'].split(',')
-  const smallLimit = headersArr[0].split(':').map(el => +el)
-  const bigLimit = headersArr[1].split(':').map(el => +el)
-
-  return {
-    smallLimit: {
-      count: smallLimit[0],
-      max: smallLimit[1]
-    },
-    bigLimit: {
-      count: bigLimit[0],
-      max: bigLimit[1]
-    }
-  }
-}
-
 const saveMatcheDetails = async (req, res, next) => {
   try {
     const { limit } = req.query || 10
     const { query } = req
 
-    const { data, headers } = await service.getMatchDetails(limit, query)
-
-    console.log(getRateLimits(headers))
+    const { data } = await service.getMatchDetails(limit, query)
     
     const match = await service.saveMatchDetails(data)
 

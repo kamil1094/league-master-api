@@ -37,7 +37,7 @@ class SummonerAPI extends RiotAPI {
       const requestUrl = `https://${region}.${this.baseUrl}summoners/by-name/${encodeURI(summonerName)}?api_key=${this.apiKey}`
       return axios.get(requestUrl)
     } catch (err) {
-      // @TODO add error handling some kind of custom error object?
+      // @TODO add error handling, some kind of custom error object?
       console.error(err)
     }
   }
