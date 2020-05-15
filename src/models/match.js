@@ -23,6 +23,8 @@ const MatchSchema = new Schema({
       spell1Id: Number,
       spell2Id: Number,
       win: Boolean,
+      lane: String,
+      role: String,
       stats: {},
     }
   ]

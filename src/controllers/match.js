@@ -8,7 +8,7 @@ const getSummonerMatchlist = async (req, res, next) => {
     const { query } = req
     
     const { data } = await service.getSummonerMatchlist(limit, query)
-    res.json({ data })
+    return res.json({ data })
   } catch (err) {
     return next(err)
   }
@@ -21,7 +21,7 @@ const getMatchDetails = async (req, res, next) => {
     
     const { data } = await service.getMatchDetails(limit, query)
 
-    res.json({ data })
+    return res.json({ data })
   } catch (err) {
     return next(err)
   }

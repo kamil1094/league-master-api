@@ -1,5 +1,7 @@
 'use strict'
 
+const Match = require('../../models/match')
+
 const { getRateLimits, sleepIfRateLimitsReached } = require('../helpers')
 
 const LeagueAPI = require('../../utils/riotAPI/LeagueAPI')
@@ -26,24 +28,30 @@ const getSummonerAccountIdByName = async (region, summonerName) => {
 
 const getAccountsIdsByNames = async (region, names) => {
   let accountsIds = []
-
+  // const testLimit = 5
   for (let i = 0; i < names.length; i++) {
     const { accountId, headers } = await getSummonerAccountIdByName(region, names[i])
 
     accountsIds.push(accountId)
 
-    sleepIfRateLimitsExceeded(getRateLimits(headers))
+    // might exceed small rate limits
+    await sleepIfRateLimitsReached(getRateLimits(headers))
   }
 
   return accountsIds
 }
 
 const getSummonerMatchesIds = async (region, accountId) => {
-  const { data, headers } = await matchAPI.getSummonerMatchlist(region, accountId)
+  try {
+    const { data, headers } = await matchAPI.getSummonerMatchlist(region, accountId)
+    const ids = data.matches.map(match => match.gameId)
 
-  return {
-    ids: data.matches.map(match => match.gameId),
-    headers,
+    return {
+      ids,
+      headers,
+    }
+  } catch (err) {
+    console.log(err)
   }
 }
 
@@ -55,24 +63,48 @@ const getSummonersMatchesIdsByAccountIds = async (region, accountsIds) => {
 
     matchesIds.push(...ids)
 
-    sleepIfRateLimitsReached(getRateLimits(headers))
+    await sleepIfRateLimitsReached(getRateLimits(headers))
   }
 
   return [...new Set(matchesIds)]
 }
 
-const filterOutAlreadySavedMatches = async matchesIds => {
-  
+const filterOutAlreadySavedGames = async matchesIds => {
+  const games = await Match.find({ gameId: { $in: matchesIds }}, { gameId: 1} )
+
+  let gamesIds = games.map(game => game.gameId)
+
+  if (games.length > 0) {
+    matchesIds.push(gamesIds)
+  }
+
+  return [...new Set(matchesIds)]
 }
 
-const getMatchesDetailsByMatchIdAndSave = async matchesIds => {
+const getGamesDetailsByMatchId = async (region, matchesIds) => {
+  let gamesData = []
 
+  for (let i = 0; i < matchesIds.length; i++) {
+    try {
+      const { data, headers } = await matchAPI.getMatchDetails(region, matchesIds[i])
+      gamesData.push(data)
+      await sleepIfRateLimitsReached(getRateLimits(headers))
+    } catch (err) {
+      if (err.response.status === 404) {
+        console.log(`match with id ${matchesIds[i]} not found`)
+      } else {
+        console.log(err.response)
+      }
+    }
+  }
+
+  return gamesData
 }
 
 module.exports = {
   getArrOfChallangerPlayersNames,
   getAccountsIdsByNames,
   getSummonersMatchesIdsByAccountIds,
-  filterOutAlreadySavedMatches,
-  getMatchesDetailsByMatchIdAndSave,
+  filterOutAlreadySavedGames,
+  getGamesDetailsByMatchId,
 }

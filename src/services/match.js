@@ -37,11 +37,15 @@ const saveMatchesDetails = async data => {
     throw 'Input data must be non empty array'
   }
 
+  let counter = 0
+
   for (let i = 0; i < data.length; i++) {
     const match = data[i]
     await saveMatchDetails(match)
+    i++
   }
 
+  console.log(`${i} games have been saved`)
   return
 }
 

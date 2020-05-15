@@ -1,11 +1,12 @@
 'use strict'
 
 const getRateLimits = headers => {
-  if (!headers['x-app-rate-limit-count']) {
+  console.log(headers)
+  if (!headers['x-app-rate-limit-count'] || !headers['x-app-rate-limit-count']) {
     return null
   }
 
-  const timeRatesString = headers['x-app-rate-limit']
+  const timeRatesString = headers['x-app-rate-limit'].split(',')
   const smallTimeLimits = timeRatesString[0].split(':').map(el => +el)
   const bigTimeLimits = timeRatesString[1].split(':').map(el => +el)
 
@@ -18,7 +19,8 @@ const getRateLimits = headers => {
       count: smallRatesLimits[0],
       max: smallRatesLimits[1],
       sleepTime: (smallTimeLimits[0] * 10) + 1000,
-      // "+ 1000" to make sure limits were refreshed // "* 10" because riot has something messed up with miliseconds conversion
+      // "+ 1000" to make sure limits were refreshed 
+      // "* 10" because riot has something messed up with miliseconds conversion
     },
     big: {
       count: bigRatesLimits[0],
@@ -28,18 +30,20 @@ const getRateLimits = headers => {
   }
 }
 
-const sleepIfRateLimitsReached = rateLimits => {
-  if (rateLimits.small.count == rateLimits.smallLimit.max) {
+const sleepIfRateLimitsReached = async rateLimits => {
+  if (rateLimits.small.count == rateLimits.small.max) {
+    console.log('sleep for ', rateLimits.small.sleepTime)
     await sleep(rateLimits.small.sleepTime)
   }
 
-  if (rateLimits.big.count == rateLimits.bigLimit.max) {
-    await sleep(rateLimits.small.sleepTime)
+  if (rateLimits.big.count == rateLimits.big.max) {
+    console.log('sleep for ', rateLimits.big.sleepTime)
+    await sleep(rateLimits.big.sleepTime)
   }
 }
 
-function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
+const sleep = ms => {
+  return new Promise(resolve => setTimeout(resolve, ms))
 }
 
 module.exports = {

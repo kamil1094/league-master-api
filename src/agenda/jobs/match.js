@@ -4,10 +4,12 @@ const {
   getArrOfChallangerPlayersNames,
   getAccountsIdsByNames,
   getSummonersMatchesIdsByAccountIds,
-  filterOutAlreadySavedMatches,
-  getMatchesDetailsByMatchIdAndSave,
+  filterOutAlreadySavedGames,
+  getGamesDetailsByMatchId,
 } = require('../../utils/jobs/match')
 const { sleep } = require('../../utils/helpers')
+
+const matchService = require('../../services/match')
 
 module.exports = agenda => {
   agenda.define('Save matches details from RIOT API', async (job, jobDone) => {
@@ -27,9 +29,13 @@ module.exports = agenda => {
       const matchesIds = await getSummonersMatchesIdsByAccountIds(region, accountsIds)
 
       // from matchesIds filter out gameIds that are already in db -> @TODO
-      const newMatchesIds = await filterOutAlreadySavedMatches(matchesIds)
+      const newMatchesIds = await filterOutAlreadySavedGames(matchesIds)
 
-      await getMatchesDetailsByMatchIdAndSave(newMatchesIds)
+      // add counter for newMatchesIds to have updates on how many match details were uploaded
+      const gamesData = await getGamesDetailsByMatchId(region, newMatchesIds)
+
+      await matchService.saveMatchesDetails(gamesData)
+
       return jobDone()
     } catch (err) {
       console.log(err)
