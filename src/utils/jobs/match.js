@@ -87,6 +87,7 @@ const getGamesDetailsByMatchId = async (region, matchesIds) => {
   for (let i = 0; i < matchesIds.length; i++) {
     try {
       const { data, headers } = await matchAPI.getMatchDetails(region, matchesIds[i])
+      // @TODO check if game data is valid and meets requirements, like if there is no 3x mid laners
       gamesData.push(data)
       await sleepIfRateLimitsReached(getRateLimits(headers))
     } catch (err) {
