@@ -17,6 +17,11 @@ const getArrOfChallangerPlayersNames = async (region, queue) => {
   return data.entries.map(player => player.summonerName)
 }
 
+const getArrOfMasterPlayersNames = async (region, queue) => {
+  const { data } = await leagueAPI.getMasterPlayers(region, queue)
+  return data.entries.map(player => player.summonerName)
+}
+
 const getSummonerAccountIdByName = async (region, summonerName) => {
   const { data, headers } = await summonerAPI.getSummonerDataByName(region, summonerName)
 
@@ -47,7 +52,7 @@ const getSummonerMatchesIds = async (region, accountId) => {
     const ids = data.matches.map(match => match.gameId)
 
     return {
-      ids,
+      ids: ids,
       headers,
     }
   } catch (err) {
@@ -81,20 +86,50 @@ const filterOutAlreadySavedGames = async matchesIds => {
   return [...new Set(matchesIds)]
 }
 
+const POSITIONS = [
+  'SUPPORT',
+  'CARRY',
+  'MIDDLE',
+  'JUNGLE',
+  'TOP'
+]
+
 const getGamesDetailsByMatchId = async (region, matchesIds) => {
   let gamesData = []
 
   for (let i = 0; i < matchesIds.length; i++) {
     try {
+      let positionsCounter = {}
+      let matchIsValid = true
+
       const { data, headers } = await matchAPI.getMatchDetails(region, matchesIds[i])
-      // @TODO check if game data is valid and meets requirements, like if there is no 3x mid laners
-      gamesData.push(data)
+
+      data.participants.forEach(participant => {
+        const precisePosition = `${participant.timeline.role}${participant.timeline.lane}`
+
+        POSITIONS.forEach(position => {
+          if (precisePosition.includes(position)) {
+            if (positionsCounter[position]) {
+              positionsCounter[position] += 1
+            } else {
+              positionsCounter[position] = 1
+            }
+          }
+        })
+      })
+
+      for (let key in positionsCounter) {
+        if (positionsCounter[key] !== 2) matchIsValid = false
+      }
+
+      if (matchIsValid) gamesData.push(data)
+      
       await sleepIfRateLimitsReached(getRateLimits(headers))
     } catch (err) {
-      if (err.response.status === 404) {
+      if (err.response && err.response.status === 404) {
         console.log(`match with id ${matchesIds[i]} not found`)
       } else {
-        console.log(err.response)
+        console.log(err)
       }
     }
   }
@@ -103,6 +138,7 @@ const getGamesDetailsByMatchId = async (region, matchesIds) => {
 }
 
 module.exports = {
+  getArrOfMasterPlayersNames,
   getArrOfChallangerPlayersNames,
   getAccountsIdsByNames,
   getSummonersMatchesIdsByAccountIds,

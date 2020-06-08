@@ -4,7 +4,7 @@ const Match = require('../../models/match')
 const Champion = require('../../models/champion')
 
 const getWinRatesObj = async () => {
-  const POSITIONS = [ // patern: participant.lane_participant.role
+  const POSITIONS = [
     'SUPPORT',
     'CARRY',
     'MIDDLE',

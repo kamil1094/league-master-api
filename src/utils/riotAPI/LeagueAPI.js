@@ -13,6 +13,11 @@ class LeagueAPI extends RiotAPI {
     const requestUrl = `https://${region}.${this.baseUrl}challengerleagues/by-queue/${queue}?api_key=${this.apiKey}`
     return axios.get(requestUrl)
   }
+
+  async getMasterPlayers(region, queue) {
+    const requestUrl = `https://${region}.${this.baseUrl}masterleagues/by-queue/${queue}?api_key=${this.apiKey}`
+    return axios.get(requestUrl)
+  }
 }
 
 module.exports = LeagueAPI

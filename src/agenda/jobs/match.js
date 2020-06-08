@@ -1,7 +1,7 @@
 'use strict'
 
 const {
-  getArrOfChallangerPlayersNames,
+  getArrOfMasterPlayersNames,
   getAccountsIdsByNames,
   getSummonersMatchesIdsByAccountIds,
   filterOutAlreadySavedGames,
@@ -14,16 +14,17 @@ const matchService = require('../../services/match')
 module.exports = agenda => {
   agenda.define('Save matches details from RIOT API', async (job, jobDone) => {
     try {
-      const region = 'eun1'
+      const region = 'euw1'
       const queue = 'RANKED_SOLO_5x5'
       console.info('job started')
 
       // consumes 1 rate-limit and gives us 200 names
-      const challangerPlayersNames = await getArrOfChallangerPlayersNames(region, queue)
+      // const challangerPlayersNames = await getArrOfChallangerPlayersNames(region, queue)
+      const masterPlayersNames = await getArrOfMasterPlayersNames(region, queue)
       sleep(1000)
 
       // consumes 1 rate-limit per 1 name and gives us 200 account ids
-      const accountsIds = await getAccountsIdsByNames(region, challangerPlayersNames)
+      const accountsIds = await getAccountsIdsByNames(region, masterPlayersNames)
 
       // gives us up 100 games per 1 accountId what means 1 rate-limit per 1 game -> 1 player = 100 rate-limits
       const matchesIds = await getSummonersMatchesIdsByAccountIds(region, accountsIds)
@@ -34,7 +35,7 @@ module.exports = agenda => {
       // add counter for newMatchesIds to have updates on how many match details were uploaded
       const gamesData = await getGamesDetailsByMatchId(region, newMatchesIds)
 
-      await matchService.saveMatchesDetails(gamesData)
+      if (gamesData && gamesData.length > 0) await matchService.saveMatchesDetails(gamesData)
 
       return jobDone()
     } catch (err) {

@@ -1,7 +1,7 @@
 'use strict'
 
 const getRateLimits = headers => {
-  console.log(headers)
+  // console.log(headers)
   if (!headers['x-app-rate-limit-count'] || !headers['x-app-rate-limit-count']) {
     return null
   }
