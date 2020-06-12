@@ -4,15 +4,16 @@ const timestamp = require('mongoose-timestamp')
 
 const ChampionSchema = new Schema({
   championId: Number,
-  winRates: [{
+  matchupData: [{
     championId: String,
-    winRate: Number,
-    opponentWinRate: Number,
-    wins: Number,
-    losses: Number,
+    winRate: Number, // winRate of champion specified in this object by championId property
+    wins: Number, // wins of champion specified in this object by championId property and the same for losses
+    looses: Number,
   }],
   pickRate: Number,
   lane: String,
+  wins: Number,
+  looses: Number,
 })
 
 ChampionSchema.plugin(timestamp, {

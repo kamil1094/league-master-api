@@ -23,6 +23,8 @@ const addPlayerDetails = (participants, participantIdentitiesModified) => {
       summonerName: participantIdentitiesModified[participant.participantId.toString()].player.summonerName,
       accountId: participantIdentitiesModified[participant.participantId.toString()].player.accountId,
       summonerId: participantIdentitiesModified[participant.participantId.toString()].player.summonerId,
+      role: participant.timeline.role,
+      lane: participant.timeline.lane,
     }
   }
 

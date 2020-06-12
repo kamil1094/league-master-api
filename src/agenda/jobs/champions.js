@@ -2,11 +2,13 @@
 
 const { getWinRatesObj, saveWinRates } = require('../../utils/jobs/champions')
 
+const jobName = 'Update champions win rates'
+
 module.exports = agenda => {
-  agenda.define('Update champions win rates', async (job, jobDone) => {
+  agenda.define(jobName, async (job, jobDone) => {
     try {
+      console.log(`job ${jobName} have just started`)
       const winRatesObj = await getWinRatesObj()
-      console.log(winRatesObj)
       await saveWinRates(winRatesObj)
       return jobDone()
     } catch (err) {

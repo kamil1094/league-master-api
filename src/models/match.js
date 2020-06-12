@@ -15,6 +15,10 @@ const MatchSchema = new Schema({
   seasonId: Number,
   gameMode: String,
   gameType: String,
+  newest: {
+    type: Boolean,
+    default: true,
+  },
   participants: [
     {
       summonerName: String,

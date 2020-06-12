@@ -11,12 +11,14 @@ const { sleep } = require('../../utils/helpers')
 
 const matchService = require('../../services/match')
 
+const jobName = 'Save matches details from RIOT API'
+
 module.exports = agenda => {
-  agenda.define('Save matches details from RIOT API', async (job, jobDone) => {
+  agenda.define(jobName, async (job, jobDone) => {
     try {
       const region = 'euw1'
       const queue = 'RANKED_SOLO_5x5'
-      console.info('job started')
+      console.info(`job ${jobName} have just started...`)
 
       // consumes 1 rate-limit and gives us 200 names
       // const challangerPlayersNames = await getArrOfChallangerPlayersNames(region, queue)
@@ -35,7 +37,17 @@ module.exports = agenda => {
       // add counter for newMatchesIds to have updates on how many match details were uploaded
       const gamesData = await getGamesDetailsByMatchId(region, newMatchesIds)
 
-      if (gamesData && gamesData.length > 0) await matchService.saveMatchesDetails(gamesData)
+      if (gamesData && gamesData.length > 0) {
+        console.log('updating old games...')
+        await matchService.updateOldGames()
+
+        console.log('saving new games...')
+        await matchService.saveMatchesDetails(gamesData)
+      }
+
+      console.log('removing old games...')
+      await matchService.removeOldGames()
+      agenda.schedule('2 minutes', 'Update champions win rates')
 
       return jobDone()
     } catch (err) {
@@ -43,12 +55,3 @@ module.exports = agenda => {
     }
   })
 }
-
-/**
- * @TODO
- * 1) get challanger players -> done
- * 2) get player name -> done
- * 3) get accountId by player name -> done
- * 4) get summoner matchlist by accountId -> done
- * 5) for each gameId get match details and save it in db with proper data mapping -> in progress
- */

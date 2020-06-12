@@ -49,9 +49,19 @@ const saveMatchesDetails = async data => {
   return
 }
 
+const updateOldGames = async () => {
+  return Match.updateMany({ newest: true }, { newest: false})
+}
+
+const removeOldGames = async () => {
+  return Match.deleteMany({ newest: false})
+}
+
 module.exports = {
   getSummonerMatchlist,
   getMatchDetails,
   saveMatchDetails,
   saveMatchesDetails,
+  updateOldGames,
+  removeOldGames,
 }
