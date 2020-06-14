@@ -2,11 +2,12 @@
 
 const Agenda = require('agenda')
 const fs = require('fs')
+const config = require('../config')
 
 const initAgenda = () => {
   let agenda = new Agenda({
     db: {
-        address: process.env.DB_URI
+        address: config.db.uri
     },
   })
   

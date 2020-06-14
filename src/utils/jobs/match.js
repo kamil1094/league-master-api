@@ -23,27 +23,35 @@ const getArrOfMasterPlayersNames = async (region, queue) => {
 }
 
 const getSummonerAccountIdByName = async (region, summonerName) => {
-  const { data, headers } = await summonerAPI.getSummonerDataByName(region, summonerName)
+  try {
+    const { data, headers } = await summonerAPI.getSummonerDataByName(region, summonerName)
 
-  return {
-    accountId: data.accountId,
-    headers,
+    return {
+      accountId: data.accountId,
+      headers,
+    }
+  } catch (err) {
+    console.log(err)
   }
 }
 
 const getAccountsIdsByNames = async (region, names) => {
-  let accountsIds = []
-  // const testLimit = 5
-  for (let i = 0; i < names.length; i++) {
-    const { accountId, headers } = await getSummonerAccountIdByName(region, names[i])
+  try {
+    let accountsIds = []
 
-    accountsIds.push(accountId)
+    for (let i = 0; i < names.length; i++) {
+      const { accountId = '', headers } = await getSummonerAccountIdByName(region, names[i])
 
-    // might exceed small rate limits
-    await sleepIfRateLimitsReached(getRateLimits(headers))
+      accountsIds.push(accountId)
+
+      // might exceed small rate limits
+      await sleepIfRateLimitsReached(getRateLimits(headers))
+    }
+
+    return accountsIds
+  } catch (err) {
+    console.log(err)
   }
-
-  return accountsIds
 }
 
 const getSummonerMatchesIds = async (region, accountId) => {
@@ -52,7 +60,7 @@ const getSummonerMatchesIds = async (region, accountId) => {
     const ids = data.matches.map(match => match.gameId)
 
     return {
-      ids: ids,
+      ids,
       headers,
     }
   } catch (err) {
@@ -64,7 +72,7 @@ const getSummonersMatchesIdsByAccountIds = async (region, accountsIds) => {
   let matchesIds = []
 
   for (let i = 0; i < accountsIds.length; i++) {
-    const { ids, headers } = await getSummonerMatchesIds(region, accountsIds[i])
+    const { ids = [], headers } = await getSummonerMatchesIds(region, accountsIds[i])
 
     matchesIds.push(...ids)
 

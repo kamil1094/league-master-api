@@ -2,10 +2,12 @@
 
 const axios = require('axios')
 
+const config = require('../../config')
+
 const RiotAPI = require('./RiotAPI')
 
 class SummonerAPI extends RiotAPI {
-  constructor(apiKey = process.env.RIOT_API_KEY) {
+  constructor(apiKey = config.riot_api_key) {
     super('summoner/v4/', apiKey)
   }
 

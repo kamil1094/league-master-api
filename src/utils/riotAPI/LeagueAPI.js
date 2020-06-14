@@ -2,10 +2,12 @@
 
 const axios = require('axios')
 
+const config = require('../../config')
+
 const RiotAPI = require('./RiotAPI')
 
 class LeagueAPI extends RiotAPI {
-  constructor(apiKey = process.env.RIOT_API_KEY) {
+  constructor(apiKey = config.riot_api_key) {
     super('league/v4/', apiKey)
   }
 

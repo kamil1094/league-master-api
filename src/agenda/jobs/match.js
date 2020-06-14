@@ -49,6 +49,8 @@ module.exports = agenda => {
       await matchService.removeOldGames()
       agenda.schedule('2 minutes', 'Update champions win rates')
 
+      console.log(`job ${jobName} is done!!!`)
+
       return jobDone()
     } catch (err) {
       console.log(err)

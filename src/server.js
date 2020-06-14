@@ -4,6 +4,7 @@ const io = require('socket.io')
 require('dotenv').config()
 // run  docker-compose -f docker-compose.yml -f docker-compose.dev.yml up for development and .prod for production
 
+const config = require('./config')
 const serverMiddleware = require('./middleware/server')
 const { applyMiddleware, applyRoutes } = require('./utils/middleware')
 const routes = require('./routes')
@@ -31,9 +32,9 @@ applyMiddleware(serverMiddleware, app)
 
 applyRoutes(routes, app)
 
-const { PORT } = process.env
-const server = app.listen(PORT, () => {
-  console.log(`Server is running at localhost:${PORT}`)
+const { port } = config
+const server = app.listen(port, () => {
+  console.log(`Server is running at localhost:${port}`)
 })
 
 applySocketIO(io.listen(server))

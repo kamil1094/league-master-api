@@ -1,9 +1,10 @@
 'use strct'
 
 const mongoose = require('mongoose')
+const config = require('../../config')
 
 const initMongoDB = async () => {
-  const connection = mongoose.connect(process.env.DB_URI, {
+  const connection = mongoose.connect(config.db.uri, {
     autoIndex: true,
     poolSize: 50,
     bufferMaxEntries: 0,
@@ -14,7 +15,7 @@ const initMongoDB = async () => {
 
   connection
     .then(db => {
-      console.info(`Successfully conneceted to ${process.env.DB_URI}`)
+      console.info(`Successfully conneceted to ${config.db.uri}`)
       return db
     }).catch(err => {
       if (err.message.code === 'ETIMEDOUT') {
