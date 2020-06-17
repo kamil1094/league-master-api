@@ -21,6 +21,7 @@
     "mongoose-timestamp": "^0.6.0",
     "nodemon": "^2.0.2",
     "pg": "^7.18.2",
+    "retry-axios": "^2.2.0",
     "socket.io": "^2.3.0"
   }
 }

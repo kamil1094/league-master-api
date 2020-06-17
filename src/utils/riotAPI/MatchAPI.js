@@ -1,6 +1,9 @@
 'use strict'
 
+const retryAxios = require('retry-axios')
 const axios = require('axios')
+
+const interceptorId = retryAxios.attach()
 
 const RiotAPI = require('./RiotAPI')
 

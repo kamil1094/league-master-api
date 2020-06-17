@@ -2,7 +2,7 @@
 
 const Match = require('../../models/match')
 
-const { getRateLimits, sleepIfRateLimitsReached } = require('../helpers')
+const { getRateLimits, sleepIfRateLimitsReached } = require('../rateLimits')
 
 const LeagueAPI = require('../../utils/riotAPI/LeagueAPI')
 const SummonerAPI = require('../../utils/riotAPI/SummonerAPI')
@@ -36,22 +36,21 @@ const getSummonerAccountIdByName = async (region, summonerName) => {
 }
 
 const getAccountsIdsByNames = async (region, names) => {
-  try {
     let accountsIds = []
 
     for (let i = 0; i < names.length; i++) {
-      const { accountId = '', headers } = await getSummonerAccountIdByName(region, names[i])
+      try {
+        const { accountId = '', headers } = await getSummonerAccountIdByName(region, names[i])
 
-      accountsIds.push(accountId)
+        accountsIds.push(accountId)
 
-      // might exceed small rate limits
-      await sleepIfRateLimitsReached(getRateLimits(headers))
+        await sleepIfRateLimitsReached(getRateLimits(headers))
+      } catch (err) {
+        console.log(err)
+      }
     }
 
     return accountsIds
-  } catch (err) {
-    console.log(err)
-  }
 }
 
 const getSummonerMatchesIds = async (region, accountId) => {
@@ -72,11 +71,16 @@ const getSummonersMatchesIdsByAccountIds = async (region, accountsIds) => {
   let matchesIds = []
 
   for (let i = 0; i < accountsIds.length; i++) {
-    const { ids = [], headers } = await getSummonerMatchesIds(region, accountsIds[i])
+    try {
+      const { ids = [], headers } = await getSummonerMatchesIds(region, accountsIds[i])
+      
+      matchesIds.push(...ids.slice(0,35))
 
-    matchesIds.push(...ids)
-
-    await sleepIfRateLimitsReached(getRateLimits(headers))
+      console.log(`all matchtes ids itterattion number ${i}`, matchesIds.length)
+      await sleepIfRateLimitsReached(getRateLimits(headers))
+    } catch (err) {
+      console.log(err)
+    }
   }
 
   return [...new Set(matchesIds)]

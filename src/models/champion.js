@@ -10,11 +10,28 @@ const ChampionSchema = new Schema({
     wins: Number, // wins of champion specified in this object by championId property and the same for losses
     looses: Number,
   }],
+  winRate: Number,
   pickRate: Number,
   lane: String,
   wins: Number,
   looses: Number,
 })
+
+ChampionSchema.pre('save', function(next) {
+  this.winRate = this.wins/(this.wins+this.looses)
+  this.matchupData = returnUpdatedMatchupData(this.matchupData)
+  return next()
+})
+
+const returnUpdatedMatchupData = matchupData => {
+  matchupData.map(matchup => {
+    const winRate = matchup.wins/(matchup.wins+matchup.looses)
+    return {
+      ...matchup,
+      winRate,
+    }
+  })
+}
 
 ChampionSchema.plugin(timestamp, {
   createdAt: { index: true },

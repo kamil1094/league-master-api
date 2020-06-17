@@ -3,19 +3,18 @@
 const Match = require('../../models/match')
 const Champion = require('../../models/champion')
 
-const getWinRatesObj = async () => {
-  const POSITIONS = [
-    'SUPPORT',
-    'CARRY',
-    'MIDDLE',
-    'JUNGLE',
-    'TOP'
-  ]
+const POSITIONS = [
+  'SUPPORT',
+  'CARRY',
+  'MIDDLE',
+  'JUNGLE',
+  'TOP'
+]
 
-  let winRatesObj = {}
-
-  const games = await Match.find().limit(10)
-  let j = 0
+const updateWinRatesObj = (oldWinRatesObj, games) => {
+  let winRatesObj = {
+    ...oldWinRatesObj,
+  }
 
   for (let i = 0; i < games.length; i++) {
     const game = games[i]
@@ -50,7 +49,7 @@ const getWinRatesObj = async () => {
         const loosingChampionId = player1.win ? player2.championId : player1.championId
 
         // player1 win rates - change to function
-        if (!winRatesObj[player1ChampionIdentifier]) { 
+        if (!winRatesObj[player1ChampionIdentifier]) {
           winRatesObj[player1ChampionIdentifier] = {
             wins: player1.championId === winningChampionId ? 1 : 0,
             looses: player1.championId === loosingChampionId ? 1 : 0,
@@ -104,9 +103,23 @@ const getWinRatesObj = async () => {
             winRatesObj[player2ChampionIdentifier][player1.championId][winningChampionId] += 1
           }
         }
-      }
-      
+      }      
     })
+  }
+
+  return winRatesObj
+}
+
+const getWinRatesObj = async () => {
+  let winRatesObj = {}
+
+  const gamesAmount = await Match.find({ newest: true }).count()
+  const loopCount = (gamesAmount / 1000)
+
+  for (let i = 0; i < loopCount; i++) {
+    const skip = i * 1000
+    const games = await Match.find({ newest: true }).limit(1000).skip(skip)
+    winRatesObj = updateWinRatesObj(winRatesObj, games)
   }
 
   return winRatesObj
@@ -144,6 +157,15 @@ const saveWinRates = async data => {
       wins: overallWins,
       looses: overallLooses,
     })
+  }
+}
+
+
+const createOrUpdateWinRates = async () => {
+  const games = await Match.find()
+
+  for (let i = 0; i++; i < games.length) {
+    const game = games[i]
   }
 }
 
