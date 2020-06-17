@@ -1,21 +1,31 @@
 'use strict'
 
+const Champion = require('../models/champion')
+
 const getChampions = async (limit, query) => {
-  // db call
-  const data = {
-    champion1: {
-      name: 'bla',
-      power: 7,
+  return Champion.find(dbQuery)
+}
+
+const getBestsOnLanes = async query => {
+  const group = {
+    $group: {
+      _id: $lane,
+      winRate: {
+        $max: $winRate
+      },
+      championId: {
+        $first: $championId
+      },
+      lane: {
+        $first: $lane
+      },
     },
-    champion2: {
-      name: 'alb',
-      power: 5,
-    }
   }
 
-  return data
+  return Champion.aggregate([group])
 }
 
 module.exports = {
   getChampions,
+  getBestsOnLanes,
 }
