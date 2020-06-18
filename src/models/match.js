@@ -3,6 +3,7 @@ const { Schema } = mongoose
 const timestamp = require('mongoose-timestamp')
 
 const MatchSchema = new Schema({
+  region: String,
   riotData: {},
   update: Number,
   gameId: {
@@ -14,6 +15,7 @@ const MatchSchema = new Schema({
   gameDuration: Number,
   seasonId: Number,
   gameMode: String,
+  rank: String,
   gameType: String,
   newest: {
     type: Boolean,

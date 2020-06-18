@@ -14,13 +14,8 @@ class LeagueAPI extends RiotAPI {
     super('league/v4/', apiKey)
   }
 
-  async getChallangerPlayers(region, queue) {
-    const requestUrl = `https://${region}.${this.baseUrl}challengerleagues/by-queue/${queue}?api_key=${this.apiKey}`
-    return axios.get(requestUrl)
-  }
-
-  async getMasterPlayers(region, queue) {
-    const requestUrl = `https://${region}.${this.baseUrl}masterleagues/by-queue/${queue}?api_key=${this.apiKey}`
+  async getPlayersList(rank, region, queue) {
+    const requestUrl = `https://${region}.${this.baseUrl}${rank}leagues/by-queue/${queue}?api_key=${this.apiKey}`
     return axios.get(requestUrl)
   }
 }

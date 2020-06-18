@@ -3,21 +3,21 @@
 const Champion = require('../models/champion')
 
 const getChampions = async (limit, query) => {
-  return Champion.find(dbQuery)
+  return Champion.find(query).sort({ winRate: -1 })
 }
 
 const getBestsOnLanes = async query => {
   const group = {
     $group: {
-      _id: $lane,
+      _id: "$lane",
       winRate: {
-        $max: $winRate
+        $max: "$winRate"
       },
       championId: {
-        $first: $championId
+        $first: "$championId"
       },
       lane: {
-        $first: $lane
+        $first: "$lane"
       },
     },
   }

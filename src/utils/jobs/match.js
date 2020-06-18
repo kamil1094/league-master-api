@@ -1,7 +1,5 @@
 'use strict'
 
-const Match = require('../../models/match')
-
 const { getRateLimits, sleepIfRateLimitsReached } = require('../rateLimits')
 
 const LeagueAPI = require('../../utils/riotAPI/LeagueAPI')
@@ -12,13 +10,19 @@ const leagueAPI = new LeagueAPI()
 const summonerAPI = new SummonerAPI()
 const matchAPI = new MatchAPI()
 
-const getArrOfChallangerPlayersNames = async (region, queue) => {
+const getArrOfChallengerPlayersNames = async (region, queue) => {
   const { data } = await leagueAPI.getChallangerPlayers(region, queue)
   return data.entries.map(player => player.summonerName)
 }
 
 const getArrOfMasterPlayersNames = async (region, queue) => {
   const { data } = await leagueAPI.getMasterPlayers(region, queue)
+  return data.entries.map(player => player.summonerName)
+}
+
+const getArrOfPlayersNames = async (rank, region, queue) => {
+  const { data } = await leagueAPI.getPlayersList(rank, region, queue)
+  
   return data.entries.map(player => player.summonerName)
 }
 
@@ -74,9 +78,8 @@ const getSummonersMatchesIdsByAccountIds = async (region, accountsIds) => {
     try {
       const { ids = [], headers } = await getSummonerMatchesIds(region, accountsIds[i])
       
-      matchesIds.push(...ids.slice(0,35))
+      matchesIds.push(...ids.slice(0,4))
 
-      console.log(`all matchtes ids itterattion number ${i}`, matchesIds.length)
       await sleepIfRateLimitsReached(getRateLimits(headers))
     } catch (err) {
       console.log(err)
@@ -86,15 +89,7 @@ const getSummonersMatchesIdsByAccountIds = async (region, accountsIds) => {
   return [...new Set(matchesIds)]
 }
 
-const filterOutAlreadySavedGames = async matchesIds => {
-  const games = await Match.find({ gameId: { $in: matchesIds }}, { gameId: 1} )
-
-  let gamesIds = games.map(game => game.gameId)
-
-  if (games.length > 0) {
-    matchesIds.push(gamesIds)
-  }
-
+const filterOutDuplicates = async matchesIds => {
   return [...new Set(matchesIds)]
 }
 
@@ -150,10 +145,9 @@ const getGamesDetailsByMatchId = async (region, matchesIds) => {
 }
 
 module.exports = {
-  getArrOfMasterPlayersNames,
-  getArrOfChallangerPlayersNames,
   getAccountsIdsByNames,
   getSummonersMatchesIdsByAccountIds,
-  filterOutAlreadySavedGames,
+  filterOutDuplicates,
   getGamesDetailsByMatchId,
+  getArrOfPlayersNames,
 }

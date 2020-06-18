@@ -18,8 +18,8 @@ const initAgenda = () => {
   
   setTimeout(() => {
     agenda.start()
-    // agenda.every('20 days', 'Save matches details from RIOT API')
-    agenda.every('20 days', 'Update champions win rates')
+    agenda.every('20 days', 'Save matches details from RIOT API and convert to win ratios')
+    //agenda.every('20 days', 'Update champions win rates')
   }, 5000)
   
   const graceful = () => {

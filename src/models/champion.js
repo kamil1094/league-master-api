@@ -24,7 +24,7 @@ ChampionSchema.pre('save', function(next) {
 })
 
 const returnUpdatedMatchupData = matchupData => {
-  matchupData.map(matchup => {
+  return matchupData.map(matchup => {
     const winRate = matchup.wins/(matchup.wins+matchup.looses)
     return {
       ...matchup,
