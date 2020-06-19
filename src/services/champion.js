@@ -25,7 +25,12 @@ const getBestsOnLanes = async query => {
   return Champion.aggregate([group])
 }
 
+const getChampionById = async id => {
+  return Champion.findById(id)
+}
+
 module.exports = {
   getChampions,
   getBestsOnLanes,
+  getChampionById,
 }

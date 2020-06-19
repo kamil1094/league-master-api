@@ -42,12 +42,30 @@ const saveMatcheDetails = async (req, res, next) => {
   }
 }
 
+const getChampionGames = async (req, res, next) => {
+  try {
+    const { last, limit, lane, championId } = req.query
+    let query = {
+      'participants.championId': championId,
+      $or: [
+        { 'participants.role': { $regex: lane, $options: 'i' } },
+        { 'participants.lane': { $regex: lane, $options: 'i' } }
+      ]
+    }
+
+    if (last) {
+      query._id = { $gt: last }
+    }
+
+    return res.json({ data: await service.getChampionGames(query, limit)})
+  } catch (err) {
+    return next(err)
+  }
+}
+
 module.exports = {
   getSummonerMatchlist,
   getMatchDetails,
   saveMatcheDetails,
+  getChampionGames,
 }
-
-//every 10 requests sleep for about 1 second
-
-//every 600 requests slepp for about 30 seconds

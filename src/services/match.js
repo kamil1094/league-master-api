@@ -60,6 +60,10 @@ const removeOldGames = async rank => {
   return Match.deleteMany({ newest: false, rank })
 }
 
+const getChampionGames = (query, limit = 0) => {
+  return Match.find(query).limit(limit)
+}
+
 module.exports = {
   getSummonerMatchlist,
   getMatchDetails,
@@ -67,4 +71,5 @@ module.exports = {
   saveMatchesDetails,
   updateOldGames,
   removeOldGames,
+  getChampionGames,
 }

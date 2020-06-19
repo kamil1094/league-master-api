@@ -17,5 +17,11 @@ module.exports = [
       controller.getBestsOnLanes,
     ]
   },
-  // get route to get specific champion data by champion id, and some logic to get best builds summoners etc.
+  {
+    path: '/api/champions/:id',
+    method: 'get',
+    handler: [
+      controller.getChampion,
+    ]
+  },
 ]

@@ -24,4 +24,11 @@ module.exports = [
       controller.saveMatcheDetails,
     ]
   },
+  {
+    path: '/api/matches/by-champion',
+    method: 'get',
+    handler: [
+      controller.getChampionGames,
+    ]
+  },
 ]
