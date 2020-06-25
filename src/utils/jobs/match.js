@@ -78,7 +78,7 @@ const getSummonersMatchesIdsByAccountIds = async (region, accountsIds) => {
     try {
       const { ids = [], headers } = await getSummonerMatchesIds(region, accountsIds[i])
       
-      matchesIds.push(...ids.slice(0,4))
+      matchesIds.push(...ids.slice(0,35))
 
       await sleepIfRateLimitsReached(getRateLimits(headers))
     } catch (err) {

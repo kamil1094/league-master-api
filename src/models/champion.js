@@ -15,11 +15,13 @@ const ChampionSchema = new Schema({
   lane: String,
   wins: Number,
   looses: Number,
+  games: Number,
 })
 
 ChampionSchema.pre('save', function(next) {
   this.winRate = this.wins/(this.wins+this.looses)
   this.matchupData = returnUpdatedMatchupData(this.matchupData)
+  this.games = this.wins + this.looses
   return next()
 })
 

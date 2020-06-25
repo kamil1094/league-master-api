@@ -21,9 +21,9 @@ const getGamesData = async (rank, region, queue) => {
   sleep(1000)
 
   // consumes 1 rate-limit per 1 name and gives us 200 account ids
-  const accountsIds = await getAccountsIdsByNames(region, masterPlayersNames.slice(0, 15))
+  const accountsIds = await getAccountsIdsByNames(region, masterPlayersNames)
 
-  // gives us up to 40 games per 1 accountId what means 1 rate-limit per 1 game -> 1 player = 100 rate-limits
+  // gives us up to 35 games per 1 accountId what means 1 rate-limit per 1 game -> 1 player = 100 rate-limits
   const matchesIds = await getSummonersMatchesIdsByAccountIds(region, accountsIds)
 
   // from matchesIds filter out gameIds which are duplicated
@@ -60,7 +60,7 @@ module.exports = agenda => {
 
         agenda.schedule('2 minutes', 'Update champions win rates')
 
-        console.info(`job ${jobName} is done!!!`)
+        console.info(`job ${winRatiosJobName} is done!!!`)
 
         return jobDone()
       }
