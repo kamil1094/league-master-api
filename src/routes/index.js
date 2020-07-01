@@ -1,10 +1,11 @@
 'use strict'
 
-const championsRoutes = require('./champions')
-const leagueRoutes = require('./leagues')
-const summonerRoutes = require('./summoners')
+const championsRoutes = require('./champion')
+const leagueRoutes = require('./league')
+const summonerRoutes = require('./summoner')
 const matchRoutes = require('./match')
 const dataTemplateRoutes = require('./dataTemplate')
+const assetRoutes = require('./asset')
 
 module.exports = [
   ...championsRoutes,
@@ -12,4 +13,5 @@ module.exports = [
   ...summonerRoutes,
   ...matchRoutes,
   ...dataTemplateRoutes,
+  ...assetRoutes,
 ]

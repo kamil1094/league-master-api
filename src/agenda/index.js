@@ -16,9 +16,12 @@ const initAgenda = () => {
     require('./jobs/' + file)(agenda)
   })
   
+  // !!! IMPORTANT !!! we need jobs for champions data templates and champions overal data to be run before app release
+
   setTimeout(() => {
     agenda.start()
-    agenda.every('20 days', 'Save matches details from RIOT API and convert to win ratios')
+    agenda.every('20 days', 'download champions square images')
+    // agenda.every('20 days', 'Save matches details from RIOT API and convert to win ratios')
     //agenda.every('20 days', 'Update champions win rates')
   }, 5000)
   
